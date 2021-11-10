@@ -53,6 +53,10 @@ public class SurveyRestaurantApplication {
 			QuestionType qt2 = new QuestionType();
 			qt2.setDescription("Multiple Respuesta");
 			qtrepo.save(qt2);
+			
+			QuestionType qt3 = new QuestionType();
+			qt3.setDescription("Respuesta abierta");
+			qtrepo.save(qt3);
 
 			Survey s = new Survey();
 			s.setName("Encuesta de satisfacción");
@@ -67,6 +71,11 @@ public class SurveyRestaurantApplication {
 			q1.setDescription("¿Que platos le gusto mas?");
 			q1.setQuestionType(qt2);
 			questionRepo.save(q1);
+			
+			Question q2 = new Question();
+			q2.setDescription("Segun su opinion ¿En que podemos mejorar?");
+			q2.setQuestionType(qt3);
+			questionRepo.save(q2);
 
 			SurveyQuestionPK qspk = new SurveyQuestionPK(q.getQuestionId(), s.getSurveyId());
 			SurveyQuestion sq = new SurveyQuestion(qspk, s, q);
@@ -75,17 +84,23 @@ public class SurveyRestaurantApplication {
 			SurveyQuestionPK qspk1 = new SurveyQuestionPK(q1.getQuestionId(), s.getSurveyId());
 			SurveyQuestion sq1= new SurveyQuestion(qspk1, s, q1);
 			surverquestionRepo.save(sq1);
+			
+			SurveyQuestionPK qspk2 = new SurveyQuestionPK(q2.getQuestionId(), s.getSurveyId());
+			SurveyQuestion sq2= new SurveyQuestion(qspk2, s, q2);
+			surverquestionRepo.save(sq2);
 
 			Answer a = new Answer("Si");
 			Answer a1 = new Answer("No");
 			Answer a2 = new Answer("Plato Fuerte");
 			Answer a3 = new Answer("Postre");
 			Answer a4 = new Answer("La entrada");
+			Answer a5 = new Answer("Escriba su opinión : ");
 			answerRepo.save(a);
 			answerRepo.save(a1);
 			answerRepo.save(a2);
 			answerRepo.save(a3);
 			answerRepo.save(a4);
+			answerRepo.save(a5);
 
 			SurveyQuestionAnswerPK sqapk = new SurveyQuestionAnswerPK(qspk, a.getAnswerId());
 			SurveyQuestionAnswer sqa = new SurveyQuestionAnswer(sqapk, sq, a);
@@ -101,12 +116,17 @@ public class SurveyRestaurantApplication {
 			
 			SurveyQuestionAnswerPK sqapk4 = new SurveyQuestionAnswerPK(qspk1, a4.getAnswerId());
 			SurveyQuestionAnswer sqa4 = new SurveyQuestionAnswer(sqapk4, sq1, a4);
+			
+			SurveyQuestionAnswerPK sqapk5 = new SurveyQuestionAnswerPK(qspk2, a5.getAnswerId());
+			SurveyQuestionAnswer sqa5 = new SurveyQuestionAnswer(sqapk5, sq2, a5);
+			
 			List<SurveyQuestionAnswer> list = new ArrayList<SurveyQuestionAnswer>();
 			list.add(sqa);
 			list.add(sqa1);
 			list.add(sqa2);
 			list.add(sqa3);
 			list.add(sqa4);
+			list.add(sqa5);
 			sqarepo.saveAll(list);
 			Customer c = new Customer("Ramiro", "Villaveces");
 			cRepo.save(c);
