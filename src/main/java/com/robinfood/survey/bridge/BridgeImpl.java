@@ -8,9 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 
 import com.robinfood.survey.ApplicationContextHolder;
 import com.robinfood.survey.dto.CustomerAnswerRequestDTO;
@@ -48,7 +49,7 @@ public class BridgeImpl extends Bridge {
 	public BridgeImpl() {
 
 	}
-	
+
 	@Autowired
 	public BridgeImpl(@Qualifier("survey") ISurvey servicio) {
 		this.iSurvey = ApplicationContextHolder.getContext().getBean(servicio.getClass());
@@ -159,7 +160,9 @@ public class BridgeImpl extends Bridge {
 					.get(customerSurveyAnswered.getKey()).entrySet()) {
 				List<SurveyQuestionAnswer> srdto = new ArrayList<SurveyQuestionAnswer>();
 				for (CustomerSurveyAnswered customerSurveyAnswered3 : customerSurveyAnswered2.getValue()) {
-					srdto.add(customerSurveyAnswered3.getSurveyQuestionAnswer());
+					SurveyQuestionAnswer sqa = customerSurveyAnswered3.getSurveyQuestionAnswer();
+					sqa.getAnswer().setDescription(sqa.getAnswer().getDescription()+(customerSurveyAnswered3.getDescription()!=null?customerSurveyAnswered3.getDescription():""));
+					srdto.add(sqa);
 				}
 				List<SurveyResponseDTO> srdto2 = convertEntitiesSurveyToDtoSurvey(srdto);
 				CustomerAnswerResponseDTO cardto = new CustomerAnswerResponseDTO();
@@ -175,7 +178,7 @@ public class BridgeImpl extends Bridge {
 
 	@Override
 	public CustomerAnswerResponseDTO saveCustomerSurveyAnswered(CustomerAnswerRequestDTO dto)
-			throws IllegalArgumentException {
+			throws IllegalArgumentException , EntityNotFoundException{
 		this.iCustomer = ApplicationContextHolder.getContext().getBean(ICustomer.class);
 		this.iQuestion = ApplicationContextHolder.getContext().getBean(IQuestion.class);
 		Customer customer = new Customer();
@@ -211,6 +214,26 @@ public class BridgeImpl extends Bridge {
 					SimpleDateFormat dt = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss.S");
 					creationDate = dt.format(customerSurveyAnswereds.getDateCreation());
 					listsurveyQuestionAnswer.add(customerSurveyAnswereds.getSurveyQuestionAnswer());
+				}
+			} else if (questionVal.getQuestionType().getQuestionTypeId() == 3L) {
+				if (questionId.getListAnswerId().size() == 1) {
+					SurveyQuestionAnswerPK sqapk = new SurveyQuestionAnswerPK(sqpk,
+							questionId.getListAnswerId().get(0));
+					CustomerSurveyAnsweredPK csapk = new CustomerSurveyAnsweredPK(sqapk, customer.getCustomerId());
+					csapk.setDateCreation(t);
+					CustomerSurveyAnswered csa = new CustomerSurveyAnswered(csapk);
+					csa.setDescription(questionId.getDescriptionQuestionOpen());
+					CustomerSurveyAnswered customerSurveyAnswereds = null;
+					customerSurveyAnswereds = this.iCustomerSurveyAnswered.saveCustomerSurveyAnswered(csa);
+					SimpleDateFormat dt = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss.S");
+					creationDate = dt.format(customerSurveyAnswereds.getDateCreation());
+					SurveyQuestionAnswer sqa = customerSurveyAnswereds.getSurveyQuestionAnswer();
+					sqa.getAnswer().setDescription(sqa.getAnswer().getDescription()+(questionId.getDescriptionQuestionOpen()!=null?questionId.getDescriptionQuestionOpen():""));
+					listsurveyQuestionAnswer.add(sqa);
+				} else {
+					throw new IllegalArgumentException(
+							"La pregunta abierta con id " + (questionVal.getQuestionType().getQuestionTypeId())
+									+ " debe tener un ID answer asociado.. ");
 				}
 			} else {
 				throw new IllegalArgumentException("La pregunta con ID : "

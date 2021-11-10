@@ -41,6 +41,9 @@ public class CustomerSurveyAnswered {
 	@Column(name="DATE_CREATION", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP", insertable = false, updatable = false)
 	@Basic(optional = false)
 	private Timestamp dateCreation;
+	
+	@Column(name="DESCRIPTION_QUESTION_OPEN")
+	private String description;
 
 	public CustomerSurveyAnswered() {
 		super();
@@ -105,6 +108,16 @@ public class CustomerSurveyAnswered {
 	public void setDateCreation(Timestamp dateCreation) {
 		this.dateCreation = dateCreation;
 	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	
 
 //	public String getDateCreation() {
 //		SimpleDateFormat dt = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss.S");

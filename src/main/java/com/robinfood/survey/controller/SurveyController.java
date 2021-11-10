@@ -2,6 +2,8 @@ package com.robinfood.survey.controller;
 
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
@@ -46,6 +48,8 @@ public class SurveyController {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		} catch (JpaObjectRetrievalFailureException e) {
 			return new ResponseEntity<>("Por favor revisar que los id concuerden por surveyId, questionId y answerId. Se deben asociar como se muestran en la encuesta.", HttpStatus.BAD_REQUEST);
+		}catch (EntityNotFoundException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}

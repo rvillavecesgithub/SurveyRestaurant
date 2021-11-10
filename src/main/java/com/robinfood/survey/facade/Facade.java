@@ -3,6 +3,8 @@ package com.robinfood.survey.facade;
 
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
+
 import com.robinfood.survey.dto.CustomerAnswerRequestDTO;
 import com.robinfood.survey.dto.CustomerAnswerResponseDTO;
 import com.robinfood.survey.dto.SurveyResponseDTO;
@@ -18,7 +20,7 @@ public interface Facade {
 	public List<SurveyResponseDTO> findAllSurveyQuestionAnswer();
 	
 	public List<CustomerAnswerResponseDTO> findAllCustomerSurveyAnswered();
-	public CustomerAnswerResponseDTO saveCustomerSurveyAnswered(CustomerAnswerRequestDTO dto)  throws IllegalArgumentException ;
+	public CustomerAnswerResponseDTO saveCustomerSurveyAnswered(CustomerAnswerRequestDTO dto)  throws IllegalArgumentException , EntityNotFoundException;
 	
 	
 }

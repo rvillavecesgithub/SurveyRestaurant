@@ -7,6 +7,8 @@ public class QuestionRequestDTO {
 	private Long questionId;
 
 	private List<Long> listAnswerId;
+	
+	private String descriptionQuestionOpen;
 
 	public QuestionRequestDTO() {
 		super();
@@ -33,5 +35,15 @@ public class QuestionRequestDTO {
 	public void setListAnswerId(List<Long> listAnswerId) {
 		this.listAnswerId = listAnswerId;
 	}
+
+	public String getDescriptionQuestionOpen() {
+		return descriptionQuestionOpen;
+	}
+
+	public void setDescriptionQuestionOpen(String descriptionQuestionOpen) {
+		this.descriptionQuestionOpen = descriptionQuestionOpen;
+	}
+	
+	
 
 }
